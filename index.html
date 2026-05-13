@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA Scorecard</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --line: #d9e2f1;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 24px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 24px;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .field input, .field textarea, .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    h2 {
+      margin: 28px 0 12px;
+      font-size: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    th {
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .points {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .score-cell {
+      font-weight: 700;
+    }
+
+    .summary {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .summary-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: #f8fbff;
+    }
+
+    .summary-box .label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .summary-box .value {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .status-pass { color: var(--success); }
+    .status-fail { color: var(--danger); }
+    .status-warn { color: var(--warning); }
+
+    .autofail-note {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 14px;
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .card { box-shadow: none; border: none; }
+      .footer-actions { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="header">
+        <h1>QA Scorecard</h1>
+        <p class="subtitle">Interactive HTML scorecard with YES/NO dropdowns and automatic scoring.</p>
+      </div>
+
+      <div class="content">
+        <div class="meta">
+          <div class="field">
+            <label for="agentName">Agent Name</label>
+            <input id="agentName" type="text" placeholder="Enter agent name" />
+          </div>
+          <div class="field">
+            <label for="reviewerName">Reviewer</label>
+            <input id="reviewerName" type="text" placeholder="Enter reviewer name" />
+          </div>
+          <div class="field">
+            <label for="reviewDate">Review Date</label>
+            <input id="reviewDate" type="date" />
+          </div>
+          <div class="field">
+            <label for="callId">Call ID</label>
+            <input id="callId" type="text" placeholder="Enter call ID" />
+          </div>
+        </div>
+
+        <h2>Scored Items</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 52%;">Item</th>
+              <th style="width: 14%;">Points</th>
+              <th style="width: 18%;">Result</th>
+              <th style="width: 16%;">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-points="5">
+              <td>Proper Greeting Used</td>
+              <td class="points">5</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+            <tr data-points="5">
+              <td>Professional Courtesies</td>
+              <td class="points">5</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+            <tr data-points="3">
+              <td>Dead Air</td>
+              <td class="points">3</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+            <tr data-points="5">
+              <td>Professional Tone of Voice</td>
+              <td class="points">5</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+            <tr data-points="3">
+              <td>Active Listening</td>
+              <td class="points">3</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+            <tr data-points="5">
+              <td>Used Required Closing Script</td>
+              <td class="points">5</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+            <tr data-points="3">
+              <td>Knowledge of Tier 1 topics</td>
+              <td class="points">3</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+            <tr data-points="10">
+              <td>Correctly Transferred</td>
+              <td class="points">10</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>AUTOFAIL</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 70%;">Item</th>
+              <th style="width: 30%;">Triggered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Unprofessional Behavior</td>
+              <td>
+                <select class="autofail-select">
+                  <option value="no">NO</option>
+                  <option value="yes">YES</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Improper Transfer 2 or more times on a call - to not include advise given by departments</td>
+              <td>
+                <select class="autofail-select">
+                  <option value="no">NO</option>
+                  <option value="yes">YES</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="summary">
+          <div class="summary-box">
+            <div class="label">Total Score</div>
+            <div class="value"><span id="earnedPoints">0</span> / <span id="totalPoints">39</span></div>
+          </div>
+          <div class="summary-box">
+            <div class="label">Score Percentage</div>
+            <div class="value"><span id="scorePercent">0%</span></div>
+          </div>
+          <div class="summary-box">
+            <div class="label">Final Status</div>
+            <div class="value status-warn" id="finalStatus">Incomplete</div>
+          </div>
+        </div>
+
+        <div class="autofail-note" id="autofailNote" style="display:none;">
+          AUTOFAIL triggered. Final status is automatically set to AUTOFAIL.
+        </div>
+
+        <div class="meta" style="margin-top:24px;">
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="comments">Reviewer Comments</label>
+            <textarea id="comments" placeholder="Enter review comments"></textarea>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button class="btn-primary" onclick="window.print()">Print / Save as PDF</button>
+          <button class="btn-secondary" onclick="resetForm()">Reset Scorecard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const resultSelects = document.querySelectorAll('.result-select');
+    const autofailSelects = document.querySelectorAll('.autofail-select');
+    const earnedPointsEl = document.getElementById('earnedPoints');
+    const totalPointsEl = document.getElementById('totalPoints');
+    const scorePercentEl = document.getElementById('scorePercent');
+    const finalStatusEl = document.getElementById('finalStatus');
+    const autofailNoteEl = document.getElementById('autofailNote');
+
+    function calculateScore() {
+      let earned = 0;
+      let total = 0;
+      let allCompleted = true;
+
+      document.querySelectorAll('tbody tr[data-points]').forEach(row => {
+        const points = Number(row.dataset.points || 0);
+        const select = row.querySelector('.result-select');
+        const scoreCell = row.querySelector('.score-cell');
+        total += points;
+
+        if (!select.value) {
+          allCompleted = false;
+          scoreCell.textContent = '0';
+          return;
+        }
+
+        const rowScore = select.value === 'yes' ? points : 0;
+        earned += rowScore;
+        scoreCell.textContent = rowScore;
+      });
+
+      const autofailTriggered = Array.from(autofailSelects).some(select => select.value === 'yes');
+      const pct = total ? Math.round((earned / total) * 100) : 0;
+
+      earnedPointsEl.textContent = earned;
+      totalPointsEl.textContent = total;
+      scorePercentEl.textContent = pct + '%';
+
+      if (autofailTriggered) {
+        finalStatusEl.textContent = 'AUTOFAIL';
+        finalStatusEl.className = 'value status-fail';
+        autofailNoteEl.style.display = 'block';
+      } else if (!allCompleted) {
+        finalStatusEl.textContent = 'Incomplete';
+        finalStatusEl.className = 'value status-warn';
+        autofailNoteEl.style.display = 'none';
+      } else {
+        finalStatusEl.textContent = 'Completed';
+        finalStatusEl.className = 'value status-pass';
+        autofailNoteEl.style.display = 'none';
+      }
+    }
+
+    function resetForm() {
+      document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+      resultSelects.forEach(select => select.value = '');
+      autofailSelects.forEach(select => select.value = 'no');
+      calculateScore();
+    }
+
+    resultSelects.forEach(select => select.addEventListener('change', calculateScore));
+    autofailSelects.forEach(select => select.addEventListener('change', calculateScore));
+
+    calculateScore();
+  </script>
+</body>
+</html>
