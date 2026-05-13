@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OCPS QA Scorecard</title>
+
   <style>
     :root {
       --bg: #f4f7fb;
@@ -60,6 +61,7 @@
       margin: 0;
       opacity: 0.95;
       font-size: 14px;
+      color: white;
     }
 
     .content {
@@ -83,18 +85,41 @@
       letter-spacing: 0.03em;
     }
 
-    .field input, .field textarea, .field select {
+    .field input,
+    .field textarea,
+    .field select {
       width: 100%;
       border: 1px solid var(--line);
       border-radius: 10px;
       padding: 10px 12px;
       font-size: 14px;
       background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .field textarea {
       min-height: 90px;
       resize: vertical;
+    }
+
+    .aws-call-id-field {
+      grid-column: span 2;
+    }
+
+    #awsCallId {
+      min-height: 42px;
+      resize: vertical;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .required {
+      color: var(--danger);
+    }
+
+    .invalid-field {
+      border-color: var(--danger) !important;
+      background: #fff5f5 !important;
     }
 
     h2 {
@@ -111,7 +136,8 @@
       background: white;
     }
 
-    th, td {
+    th,
+    td {
       padding: 14px 12px;
       border-bottom: 1px solid var(--line);
       text-align: left;
@@ -127,7 +153,9 @@
       letter-spacing: 0.03em;
     }
 
-    tr:last-child td { border-bottom: none; }
+    tr:last-child td {
+      border-bottom: none;
+    }
 
     .points {
       font-weight: 700;
@@ -166,9 +194,17 @@
       font-weight: 800;
     }
 
-    .status-pass { color: var(--success); }
-    .status-fail { color: var(--danger); }
-    .status-warn { color: var(--warning); }
+    .status-pass {
+      color: var(--success);
+    }
+
+    .status-fail {
+      color: var(--danger);
+    }
+
+    .status-warn {
+      color: var(--warning);
+    }
 
     .autofail-note {
       margin-top: 12px;
@@ -229,7 +265,26 @@
         print-color-adjust: exact;
       }
 
-      th, .summary-box, .autofail-note {
+      .subtitle {
+        color: #ffffff !important;
+      }
+
+      .aws-call-id-field {
+        grid-column: 1 / -1;
+      }
+
+      #awsCallId {
+        min-height: 55px;
+        height: auto;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        overflow: visible;
+      }
+
+      th,
+      .summary-box,
+      .autofail-note {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
@@ -240,6 +295,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="card">
@@ -251,28 +307,33 @@
       <div class="content">
         <div class="meta">
           <div class="field">
-            <label for="agentName">Agent Name</label>
-            <input id="agentName" type="text" placeholder="Enter agent name" />
+            <label for="agentName">Agent Name <span class="required">*</span></label>
+            <input id="agentName" type="text" placeholder="Enter agent name" required />
           </div>
+
           <div class="field">
-            <label for="reviewerName">Reviewer</label>
-            <input id="reviewerName" type="text" placeholder="Enter reviewer name" />
+            <label for="reviewerName">Reviewer <span class="required">*</span></label>
+            <input id="reviewerName" type="text" placeholder="Enter reviewer name" required />
           </div>
+
           <div class="field">
-            <label for="reviewDate">Review Date</label>
-            <input id="reviewDate" type="date" />
+            <label for="callDate">Call Date <span class="required">*</span></label>
+            <input id="callDate" type="date" required />
           </div>
+
           <div class="field">
-            <label for="callDate">Call Date</label>
-            <input id="callDate" type="date" />
+            <label for="reviewDate">Review Date <span class="required">*</span></label>
+            <input id="reviewDate" type="date" required />
           </div>
-          <div class="field">
-            <label for="callId">AWS Call ID</label>
-            <input id="callId" type="text" placeholder="Enter call ID" />
+
+          <div class="field aws-call-id-field">
+            <label for="awsCallId">AWS Call ID <span class="required">*</span></label>
+            <textarea id="awsCallId" placeholder="Enter AWS Call ID" required></textarea>
           </div>
         </div>
 
         <h2>Scored Items</h2>
+
         <table>
           <thead>
             <tr>
@@ -282,6 +343,7 @@
               <th style="width: 16%;">Score</th>
             </tr>
           </thead>
+
           <tbody>
             <tr data-points="5">
               <td>Proper Greeting Used</td>
@@ -295,6 +357,7 @@
               </td>
               <td class="score-cell">0</td>
             </tr>
+
             <tr data-points="5">
               <td>Professional Courtesies</td>
               <td class="points">5</td>
@@ -307,6 +370,7 @@
               </td>
               <td class="score-cell">0</td>
             </tr>
+
             <tr data-points="3">
               <td>Dead Air</td>
               <td class="points">3</td>
@@ -319,6 +383,7 @@
               </td>
               <td class="score-cell">0</td>
             </tr>
+
             <tr data-points="5">
               <td>Professional Tone of Voice</td>
               <td class="points">5</td>
@@ -331,6 +396,7 @@
               </td>
               <td class="score-cell">0</td>
             </tr>
+
             <tr data-points="3">
               <td>Active Listening</td>
               <td class="points">3</td>
@@ -343,6 +409,7 @@
               </td>
               <td class="score-cell">0</td>
             </tr>
+
             <tr data-points="5">
               <td>Used Required Closing Script</td>
               <td class="points">5</td>
@@ -355,6 +422,7 @@
               </td>
               <td class="score-cell">0</td>
             </tr>
+
             <tr data-points="3">
               <td>Knowledge of Tier 1 topics</td>
               <td class="points">3</td>
@@ -367,9 +435,23 @@
               </td>
               <td class="score-cell">0</td>
             </tr>
-            <tr data-points="10">
+
+            <tr data-points="5">
+              <td>Appropriately Warm/Cold Transferred</td>
+              <td class="points">5</td>
+              <td>
+                <select class="result-select">
+                  <option value="">Select</option>
+                  <option value="yes">YES</option>
+                  <option value="no">NO</option>
+                </select>
+              </td>
+              <td class="score-cell">0</td>
+            </tr>
+
+            <tr data-points="6">
               <td>Correctly Transferred</td>
-              <td class="points">10</td>
+              <td class="points">6</td>
               <td>
                 <select class="result-select">
                   <option value="">Select</option>
@@ -383,6 +465,7 @@
         </table>
 
         <h2>AUTOFAIL</h2>
+
         <table>
           <thead>
             <tr>
@@ -390,6 +473,7 @@
               <th style="width: 30%;">Triggered</th>
             </tr>
           </thead>
+
           <tbody>
             <tr>
               <td>Unprofessional Behavior</td>
@@ -400,8 +484,9 @@
                 </select>
               </td>
             </tr>
+
             <tr>
-              <td>Improper Transfer 2 or more times on a call - to not include advise given by departments</td>
+              <td>Improper Transfer 2 or more times on a call - to not include advice given by departments</td>
               <td>
                 <select class="autofail-select">
                   <option value="no">NO</option>
@@ -415,12 +500,18 @@
         <div class="summary">
           <div class="summary-box">
             <div class="label">Total Score</div>
-            <div class="value"><span id="earnedPoints">0</span> / <span id="totalPoints">39</span></div>
+            <div class="value">
+              <span id="earnedPoints">0</span> / <span id="totalPoints">40</span>
+            </div>
           </div>
+
           <div class="summary-box">
             <div class="label">Score Percentage</div>
-            <div class="value"><span id="scorePercent">0%</span></div>
+            <div class="value">
+              <span id="scorePercent">0%</span>
+            </div>
           </div>
+
           <div class="summary-box">
             <div class="label">Final Status</div>
             <div class="value status-warn" id="finalStatus">Incomplete</div>
@@ -439,7 +530,7 @@
         </div>
 
         <div class="footer-actions">
-          <button class="btn-primary" onclick="window.print()">Print / Save as PDF</button>
+          <button class="btn-primary" onclick="printScorecard()">Print / Save as PDF</button>
           <button class="btn-secondary" onclick="resetForm()">Reset Scorecard</button>
         </div>
       </div>
@@ -464,6 +555,7 @@
         const points = Number(row.dataset.points || 0);
         const select = row.querySelector('.result-select');
         const scoreCell = row.querySelector('.score-cell');
+
         total += points;
 
         if (!select.value) {
@@ -499,15 +591,63 @@
       }
     }
 
+    function printScorecard() {
+      const requiredFields = document.querySelectorAll('[required]');
+      let firstInvalid = null;
+
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.classList.add('invalid-field');
+
+          if (!firstInvalid) {
+            firstInvalid = field;
+          }
+        } else {
+          field.classList.remove('invalid-field');
+        }
+      });
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+        alert('Please complete all required fields before printing.');
+        return;
+      }
+
+      window.print();
+    }
+
     function resetForm() {
-      document.querySelectorAll('input, textarea').forEach(el => el.value = '');
-      resultSelects.forEach(select => select.value = '');
-      autofailSelects.forEach(select => select.value = 'no');
+      document.querySelectorAll('input, textarea').forEach(el => {
+        el.value = '';
+        el.classList.remove('invalid-field');
+      });
+
+      resultSelects.forEach(select => {
+        select.value = '';
+      });
+
+      autofailSelects.forEach(select => {
+        select.value = 'no';
+      });
+
       calculateScore();
     }
 
-    resultSelects.forEach(select => select.addEventListener('change', calculateScore));
-    autofailSelects.forEach(select => select.addEventListener('change', calculateScore));
+    resultSelects.forEach(select => {
+      select.addEventListener('change', calculateScore);
+    });
+
+    autofailSelects.forEach(select => {
+      select.addEventListener('change', calculateScore);
+    });
+
+    document.querySelectorAll('[required]').forEach(field => {
+      field.addEventListener('input', () => {
+        if (field.value.trim()) {
+          field.classList.remove('invalid-field');
+        }
+      });
+    });
 
     calculateScore();
   </script>
